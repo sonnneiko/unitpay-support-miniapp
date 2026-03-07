@@ -119,6 +119,25 @@ export const QuizPage: FC = () => {
       <div className="quiz__body">
         <p className="quiz__question">{question.text}</p>
 
+        {question.chatMessages && (
+          <div className="quiz__chat">
+            {question.chatMessages.map((msg, i) => (
+              <div key={i} className={`quiz__chat-msg quiz__chat-msg--${msg.side}`}>
+                <span className="quiz__chat-author">{msg.author}</span>
+                <div className="quiz__chat-bubble">
+                  {msg.isTyping ? (
+                    <div className="quiz__chat-typing">
+                      <div className="quiz__chat-typing-dot" />
+                      <div className="quiz__chat-typing-dot" />
+                      <div className="quiz__chat-typing-dot" />
+                    </div>
+                  ) : msg.text}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="quiz__options">
           {question.options.map((option, i) => (
             <button
