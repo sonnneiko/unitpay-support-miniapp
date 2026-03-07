@@ -15,8 +15,9 @@ export function App() {
     >
       <HashRouter>
         <Routes>
-          {routes.map((route) => <Route key={route.path} {...route} />)}
-          <Route path="*" element={<Navigate to="/"/>}/>
+          <Route path="/" element={<Navigate to="/onboarding" replace />} />
+          {routes.filter(r => r.path !== '/').map((route) => <Route key={route.path} {...route} />)}
+          <Route path="*" element={<Navigate to="/onboarding" replace />} />
         </Routes>
       </HashRouter>
     </AppRoot>
