@@ -1,8 +1,8 @@
-# Telegram Mini Apps React Template
+# Шаблон React для Telegram Mini Apps
 
-This template demonstrates how developers can implement a single-page
-application on the Telegram Mini Apps platform using the following technologies
-and libraries:
+Этот шаблон демонстрирует, как разработчики могут создать одностраничное
+приложение на платформе Telegram Mini Apps с использованием следующих технологий
+и библиотек:
 
 - [React](https://react.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
@@ -11,62 +11,60 @@ and libraries:
 - [Telegram UI](https://github.com/Telegram-Mini-Apps/TelegramUI)
 - [Vite](https://vitejs.dev/)
 
-> The template was created using [npm](https://www.npmjs.com/). Therefore, it is
-> required to use it for this project as well. Using other package managers, you
-> will receive a corresponding error.
+> Шаблон был создан с использованием [npm](https://www.npmjs.com/). Поэтому
+> для работы с этим проектом также необходимо использовать npm. При использовании
+> других пакетных менеджеров вы получите соответствующую ошибку.
 
-## Install Dependencies
+## Установка зависимостей
 
-If you have just cloned this template, you should install the project
-dependencies using the command:
+Если вы только что склонировали этот шаблон, установите зависимости проекта
+с помощью команды:
 
 ```Bash
 npm install
 ```
 
-## Scripts
+## Скрипты
 
-This project contains the following scripts:
+Проект содержит следующие скрипты:
 
-- `dev`. Runs the application in development mode.
-- `dev:https`. Runs the application in development mode using locally created valid SSL-certificates.
-- `build`. Builds the application for production.
-- `lint`. Runs [eslint](https://eslint.org/) to ensure the code quality meets
-  the required standards.
-- `deploy`. Deploys the application to GitHub Pages.
+- `dev` — запускает приложение в режиме разработки.
+- `dev:https` — запускает приложение в режиме разработки с локально созданными SSL-сертификатами.
+- `build` — собирает приложение для продакшена.
+- `lint` — запускает [eslint](https://eslint.org/) для проверки качества кода.
+- `deploy` — публикует приложение на GitHub Pages.
 
-To run a script, use the `npm run` command:
+Для запуска скрипта используйте команду `npm run`:
 
 ```Bash
-npm run {script}
-# Example: npm run build
+npm run {скрипт}
+# Пример: npm run build
 ```
 
-## Create Bot and Mini App
+## Создание бота и мини-приложения
 
-Before you start, make sure you have already created a Telegram Bot. Here is
-a [comprehensive guide](https://docs.telegram-mini-apps.com/platform/creating-new-app)
-on how to do it.
+Перед началом работы убедитесь, что у вас уже создан Telegram-бот. Здесь
+находится [подробное руководство](https://docs.telegram-mini-apps.com/platform/creating-new-app)
+по его созданию.
 
-## Run
+## Запуск
 
-Although Mini Apps are designed to be opened
-within [Telegram applications](https://docs.telegram-mini-apps.com/platform/about#supported-applications),
-you can still develop and test them outside of Telegram during the development
-process.
+Хотя Mini Apps предназначены для открытия
+внутри [Telegram](https://docs.telegram-mini-apps.com/platform/about#supported-applications),
+в процессе разработки их можно разрабатывать и тестировать вне Telegram.
 
-To run the application in the development mode, use the `dev` script:
+Для запуска приложения в режиме разработки используйте скрипт `dev`:
 
 ```bash
 npm run dev:https
 ```
 
 > [!NOTE]
-> As long as we use [vite-plugin-mkcert](https://www.npmjs.com/package/vite-plugin-mkcert),
-> launching the dev mode for the first time, you may see sudo password request.
-> The plugin requires it to properly configure SSL-certificates. To disable the plugin, use the `npm run dev` command.
+> Поскольку используется [vite-plugin-mkcert](https://www.npmjs.com/package/vite-plugin-mkcert),
+> при первом запуске режима разработки может появиться запрос пароля sudo.
+> Плагин требует его для корректной настройки SSL-сертификатов. Чтобы отключить плагин, используйте команду `npm run dev`.
 
-After this, you will see a similar message in your terminal:
+После запуска в терминале появится примерно следующее:
 
 ```bash
 VITE v5.2.12  ready in 237 ms
@@ -78,57 +76,55 @@ VITE v5.2.12  ready in 237 ms
 ➜  press h + enter to show help
 ```
 
-Here, you can see the `Local` link, available locally, and `Network` links
-accessible to all devices in the same network with the current device.
+Здесь вы увидите ссылку `Local`, доступную локально, и ссылки `Network`,
+доступные всем устройствам в той же сети.
 
-To view the application, you need to open the `Local`
-link (`https://localhost:5173/reactjs-template` in this example) in your
-browser:
+Чтобы открыть приложение, откройте ссылку `Local`
+(`https://localhost:5173/reactjs-template` в данном примере) в браузере:
 
-![Application](assets/application.png)
+![Приложение](assets/application.png)
 
-It is important to note that some libraries in this template, such as
-`@tma.js/sdk`, are not intended for use outside of Telegram.
+Важно отметить, что некоторые библиотеки в этом шаблоне, например
+`@tma.js/sdk`, не предназначены для использования вне Telegram.
 
-Nevertheless, they appear to function properly. This is because the
-`src/mockEnv.ts` file, which is imported in the application's entry point (
-`src/index.ts`), employs the `mockTelegramEnv` function to simulate the Telegram
-environment. This trick convinces the application that it is running in a
-Telegram-based environment. Therefore, be cautious not to use this function in
-production mode unless you fully understand its implications.
+Тем не менее, они работают корректно. Это связано с тем, что файл
+`src/mockEnv.ts`, импортируемый в точке входа приложения (`src/index.ts`),
+использует функцию `mockTelegramEnv` для имитации окружения Telegram.
+Этот приём убеждает приложение, что оно работает внутри Telegram.
+Поэтому будьте осторожны и не используйте эту функцию в продакшене,
+если не понимаете полностью её последствий.
 
 > [!WARNING]
-> Because we are using self-signed SSL certificates, the Android and iOS
-> Telegram applications will not be able to display the application. These
-> operating systems enforce stricter security measures, preventing the Mini App
-> from loading. To address this issue, refer to
-> [this guide](https://docs.telegram-mini-apps.com/platform/getting-app-link#remote).
+> Поскольку используются самоподписанные SSL-сертификаты, приложения
+> Telegram на Android и iOS не смогут отобразить приложение. Эти операционные
+> системы применяют более строгие меры безопасности, препятствующие загрузке
+> Mini App. Для решения этой проблемы обратитесь к
+> [данному руководству](https://docs.telegram-mini-apps.com/platform/getting-app-link#remote).
 
-## Deploy
+## Деплой
 
-This boilerplate uses GitHub Pages as the way to host the application
-externally. GitHub Pages provides a CDN which will let your users receive the
-application rapidly. Alternatively, you could use such services
-as [Heroku](https://www.heroku.com/) or [Vercel](https://vercel.com).
+Этот шаблон использует GitHub Pages для внешнего хостинга приложения.
+GitHub Pages предоставляет CDN, что позволяет пользователям быстро получать
+приложение. В качестве альтернативы можно использовать такие сервисы,
+как [Heroku](https://www.heroku.com/) или [Vercel](https://vercel.com).
 
-### Manual Deployment
+### Ручной деплой
 
-This boilerplate uses the [gh-pages](https://www.npmjs.com/package/gh-pages)
-tool, which allows deploying your application right from your PC.
+Шаблон использует инструмент [gh-pages](https://www.npmjs.com/package/gh-pages),
+который позволяет публиковать приложение прямо с вашего компьютера.
 
-#### Configuring
+#### Настройка
 
-Before running the deployment process, ensure that you have done the following:
+Перед запуском процесса деплоя убедитесь, что вы выполнили следующее:
 
-1. Replaced the `homepage` value in `package.json`. The GitHub Pages deploy tool
-   uses this value to
-   determine the related GitHub project.
-2. Replaced the `base` value in `vite.config.ts` and have set it to the name of
-   your GitHub
-   repository. Vite will use this value when creating paths to static assets.
+1. Заменили значение `homepage` в `package.json`. Инструмент деплоя GitHub Pages
+   использует это значение для определения связанного проекта на GitHub.
+2. Заменили значение `base` в `vite.config.ts`, установив его равным имени
+   вашего репозитория на GitHub. Vite использует это значение при создании
+   путей к статическим ресурсам.
 
-For instance, if your GitHub username is `telegram-mini-apps` and the repository
-name is `is-awesome`, the value in the `homepage` field should be the following:
+Например, если ваш GitHub-логин — `telegram-mini-apps`, а репозиторий называется
+`is-awesome`, поле `homepage` должно выглядеть так:
 
 ```json
 {
@@ -136,7 +132,7 @@ name is `is-awesome`, the value in the `homepage` field should be the following:
 }
 ```
 
-And `vite.config.ts` should have this content:
+А `vite.config.ts` должен содержать:
 
 ```ts
 export default defineConfig({
@@ -145,68 +141,66 @@ export default defineConfig({
 });
 ```
 
-You can find more information on configuring the deployment in the `gh-pages`
-[docs](https://github.com/tschaub/gh-pages?tab=readme-ov-file#github-pages-project-sites).
+Подробнее о настройке деплоя можно узнать в
+[документации gh-pages](https://github.com/tschaub/gh-pages?tab=readme-ov-file#github-pages-project-sites).
 
-#### Before Deploying
+#### Перед деплоем
 
-Before deploying the application, make sure that you've built it and going to
-deploy the fresh static files:
+Перед публикацией приложения убедитесь, что оно собрано и вы готовы
+задеплоить свежие статические файлы:
 
 ```bash
 npm run build
 ```
 
-Then, run the deployment process, using the `deploy` script:
+Затем запустите процесс деплоя с помощью скрипта `deploy`:
 
 ```Bash
 npm run deploy
 ```
 
-After the deployment completed successfully, visit the page with data according
-to your username and repository name. Here is the page link example using the
-data mentioned above:
+После успешного завершения деплоя перейдите на страницу с данными вашего
+логина и репозитория. Пример ссылки на основе указанных выше данных:
 https://telegram-mini-apps.github.io/is-awesome
 
 ### GitHub Workflow
 
-To simplify the deployment process, this template includes a
-pre-configured [GitHub workflow](.github/workflows/github-pages-deploy.yml) that
-automatically deploys the project when changes are pushed to the `master`
-branch.
+Для упрощения процесса деплоя шаблон включает предварительно настроенный
+[GitHub workflow](.github/workflows/github-pages-deploy.yml), который
+автоматически публикует проект при отправке изменений в ветку `master`.
 
-To enable this workflow, create a new environment (or edit the existing one) in
-the GitHub repository settings and name it `github-pages`. Then, add the
-`master` branch to the list of deployment branches.
+Чтобы включить этот workflow, создайте новое окружение (или отредактируйте
+существующее) в настройках репозитория GitHub и назовите его `github-pages`.
+Затем добавьте ветку `master` в список веток для деплоя.
 
-You can find the environment settings using this
-URL: `https://github.com/{username}/{repository}/settings/environments`.
+Настройки окружения можно найти по адресу:
+`https://github.com/{username}/{repository}/settings/environments`.
 
 ![img.png](.github/deployment-branches.png)
 
-In case, you don't want to do it automatically, or you don't use GitHub as the
-project codebase, remove the `.github` directory.
+Если вы не хотите использовать автоматический деплой или не используете GitHub
+для хранения кода, удалите директорию `.github`.
 
-### GitHub Web Interface
+### Через веб-интерфейс GitHub
 
-Alternatively, developers can configure automatic deployment using the GitHub
-web interface. To do this, follow the link:
+Разработчики также могут настроить автоматический деплой через веб-интерфейс
+GitHub. Для этого перейдите по ссылке:
 `https://github.com/{username}/{repository}/settings/pages`.
 
 ## TON Connect
 
-This boilerplate utilizes
-the [TON Connect](https://docs.ton.org/develop/dapps/ton-connect/overview)
-project to demonstrate how developers can integrate functionality related to TON
-cryptocurrency.
+Этот шаблон использует проект
+[TON Connect](https://docs.ton.org/develop/dapps/ton-connect/overview)
+для демонстрации того, как разработчики могут интегрировать функциональность,
+связанную с криптовалютой TON.
 
-The TON Connect manifest used in this boilerplate is stored in the `public`
-folder, where all publicly accessible static files are located. Remember
-to [configure](https://docs.ton.org/develop/dapps/ton-connect/manifest) this
-file according to your project's information.
+Манифест TON Connect, используемый в шаблоне, хранится в папке `public`,
+где находятся все публично доступные статические файлы. Не забудьте
+[настроить](https://docs.ton.org/develop/dapps/ton-connect/manifest)
+этот файл в соответствии с информацией о вашем проекте.
 
-## Useful Links
+## Полезные ссылки
 
-- [Platform documentation](https://docs.telegram-mini-apps.com/)
-- [@tma.js/sdk-react documentation](https://docs.telegram-mini-apps.com/packages/tma-js-sdk-react)
-- [Telegram developers community chat](https://t.me/devs_cis)
+- [Документация платформы](https://docs.telegram-mini-apps.com/)
+- [Документация @tma.js/sdk-react](https://docs.telegram-mini-apps.com/packages/tma-js-sdk-react)
+- [Чат сообщества разработчиков Telegram](https://t.me/devs_cis)
