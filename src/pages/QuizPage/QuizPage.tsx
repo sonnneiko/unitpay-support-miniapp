@@ -7,6 +7,13 @@ import './QuizPage.css';
 
 const LETTERS = ['А', 'Б', 'В', 'Г'];
 
+const renderWithCode = (text: string) =>
+  text.split(/`([^`]+)`/).map((part, i) =>
+    i % 2 === 1
+      ? <code key={i} className="quiz__code">{part}</code>
+      : part
+  );
+
 type AnswerState = 'idle' | 'correct' | 'wrong';
 
 export const QuizPage: FC = () => {
@@ -146,7 +153,7 @@ export const QuizPage: FC = () => {
               onClick={() => handleSelect(i)}
             >
               <span className="quiz__option-letter">{LETTERS[i]}</span>
-              {option}
+              <span>{renderWithCode(option)}</span>
             </button>
           ))}
         </div>
