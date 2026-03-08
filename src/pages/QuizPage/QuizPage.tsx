@@ -36,7 +36,7 @@ export const QuizPage: FC = () => {
   const question = questions[currentIndex];
 
   const handleSelect = (optionIndex: number) => {
-    if (answerState === 'correct') return;
+    if (answerState !== 'idle') return;
 
     setSelectedIndex(optionIndex);
 
@@ -59,12 +59,14 @@ export const QuizPage: FC = () => {
 
   const getOptionClass = (i: number) => {
     const classes = ['quiz__option'];
-    if (answerState === 'correct' && i === question.correctIndex) {
-      classes.push('quiz__option--correct');
-    } else if (answerState === 'wrong' && i === selectedIndex) {
-      classes.push('quiz__option--wrong');
-    } else if (answerState === 'correct' && i !== question.correctIndex) {
-      classes.push('quiz__option--locked');
+    if (answerState !== 'idle') {
+      if (i === question.correctIndex) {
+        classes.push('quiz__option--correct');
+      } else if (answerState === 'wrong' && i === selectedIndex) {
+        classes.push('quiz__option--wrong');
+      } else {
+        classes.push('quiz__option--locked');
+      }
     }
     return classes.join(' ');
   };
@@ -158,19 +160,21 @@ export const QuizPage: FC = () => {
           ))}
         </div>
 
-        {answerState === 'correct' && (
-          <div className="quiz__feedback quiz__feedback--correct">
-            ✅ Верно!
-          </div>
-        )}
-        {answerState === 'wrong' && (
-          <div className="quiz__feedback quiz__feedback--wrong">
-            ❌ Неверно — попробуй ещё раз
+        {answerState !== 'idle' && (
+          <div className={`quiz__feedback quiz__feedback--${answerState}`}>
+            <span className="quiz__feedback-title">
+              {answerState === 'correct'
+                ? '✅ Всё верно!'
+                : `❌ Нет, это не «${question.options[selectedIndex!]}».`}
+            </span>
+            {question.explanation && (
+              <p className="quiz__feedback-text">{question.explanation}</p>
+            )}
           </div>
         )}
       </div>
 
-      {answerState === 'correct' && (
+      {answerState !== 'idle' && (
         <div className="quiz__footer">
           <button className="quiz__next" onClick={handleNext}>
             {currentIndex < questions.length - 1 ? 'Далее →' : 'Завершить'}

@@ -10,6 +10,7 @@ export interface Question {
   chatMessages?: ChatMessage[];
   options: string[];
   correctIndex: number;
+  explanation?: string;
 }
 
 export interface TopicData {
@@ -32,6 +33,7 @@ export const topicsData: TopicData[] = [
           'Онлайн-касса',
         ],
         correctIndex: 0,
+        explanation: 'UnitPay — это платёжный агрегатор, который помогает бизнесу принимать онлайн-платежи.',
       },
       {
         text: 'Методы приёма платежей в UnitPay?',

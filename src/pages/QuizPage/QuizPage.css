@@ -242,23 +242,40 @@
 /* Feedback */
 .quiz__feedback {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
   margin-top: 16px;
   padding: 12px 16px;
   border-radius: 12px;
-  font-size: 15px;
-  font-weight: 500;
 }
 
 .quiz__feedback--correct {
   background: rgba(52, 199, 89, 0.12);
-  color: #1a7a32;
 }
 
 .quiz__feedback--wrong {
   background: rgba(255, 59, 48, 0.10);
+}
+
+.quiz__feedback-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.quiz__feedback--correct .quiz__feedback-title {
+  color: #1a7a32;
+}
+
+.quiz__feedback--wrong .quiz__feedback-title {
   color: #c0392b;
+}
+
+.quiz__feedback-text {
+  font-size: 14px;
+  color: var(--tg-theme-text-color, #000);
+  margin: 0;
+  line-height: 1.45;
+  opacity: 0.85;
 }
 
 /* Footer */
