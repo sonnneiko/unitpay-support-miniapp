@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { backButton } from '@tma.js/sdk-react';
 
 import { topicsData } from '@/data/questions';
+import { saveTopicResults, getTopicResults, saveTopicProgress, getTopicProgress, clearTopicProgress } from '@/store/quizResults';
 import './QuizPage.css';
 
 const LETTERS = ['А', 'Б', 'В', 'Г'];
@@ -28,10 +29,14 @@ export const QuizPage: FC = () => {
     return backButton.onClick(() => navigate('/topics'));
   }, [navigate]);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const savedProgress = topicId ? getTopicProgress(topicId) : null;
+  const savedResults = topicId ? getTopicResults(topicId) : null;
+
+  const [currentIndex, setCurrentIndex] = useState(savedProgress?.currentIndex ?? 0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [answerState, setAnswerState] = useState<AnswerState>('idle');
-  const [finished, setFinished] = useState(false);
+  const [finished, setFinished] = useState(savedResults !== null);
+  const [results, setResults] = useState<('correct' | 'wrong')[]>(savedResults ?? savedProgress?.results ?? []);
 
   const question = questions[currentIndex];
 
@@ -48,11 +53,18 @@ export const QuizPage: FC = () => {
   };
 
   const handleNext = () => {
+    const newResults = [...results, answerState as 'correct' | 'wrong'];
+    setResults(newResults);
+
     if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
       setSelectedIndex(null);
       setAnswerState('idle');
+      saveTopicProgress(topicId!, nextIndex, newResults);
     } else {
+      saveTopicResults(topicId!, newResults);
+      clearTopicProgress(topicId!);
       setFinished(true);
     }
   };
@@ -87,12 +99,25 @@ export const QuizPage: FC = () => {
   }
 
   if (finished) {
+    const correctCount = results.filter(r => r === 'correct').length;
+    const total = questions.length;
     return (
       <div className="quiz">
         <div className="quiz__finish">
           <p className="quiz__finish-emoji">🎉</p>
           <p className="quiz__finish-title">Раздел пройден!</p>
           <p className="quiz__finish-subtitle">{topic.title}</p>
+          <div className="quiz__finish-stats">
+            <div className="quiz__finish-stat quiz__finish-stat--correct">
+              <span className="quiz__finish-stat-value">{correctCount}</span>
+              <span className="quiz__finish-stat-label">верно</span>
+            </div>
+            <div className="quiz__finish-stat-divider" />
+            <div className="quiz__finish-stat quiz__finish-stat--wrong">
+              <span className="quiz__finish-stat-value">{total - correctCount}</span>
+              <span className="quiz__finish-stat-label">ошибок</span>
+            </div>
+          </div>
         </div>
         <div className="quiz__footer">
           <button className="quiz__next" onClick={() => navigate('/topics')}>К темам</button>
@@ -111,7 +136,9 @@ export const QuizPage: FC = () => {
                 key={i}
                 className={`quiz__progress-segment${
                   i < currentIndex
-                    ? ' quiz__progress-segment--done'
+                    ? results[i] === 'correct'
+                      ? ' quiz__progress-segment--correct'
+                      : ' quiz__progress-segment--wrong'
                     : i === currentIndex
                     ? ' quiz__progress-segment--current'
                     : ''
