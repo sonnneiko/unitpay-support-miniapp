@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { backButton } from '@tma.js/sdk-react';
 
 import { topicsData } from '@/data/questions';
-import { getTopicResults } from '@/store/quizResults';
+import { getTopicResults, getTopicProgress } from '@/store/quizResults';
 import { QuizRing } from '@/components/QuizRing/QuizRing';
 import './TopicsPage.css';
 
@@ -47,7 +47,7 @@ export const TopicsPage: FC = () => {
         {topics.map((topic) => {
           const topicData = topicsData.find(t => t.id === topic.id);
           const total = topicData?.questions.length ?? 0;
-          const results = getTopicResults(topic.id);
+          const results = getTopicResults(topic.id) ?? getTopicProgress(topic.id)?.results ?? null;
 
           return (
             <button
