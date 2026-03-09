@@ -4,6 +4,7 @@ import { backButton } from '@tma.js/sdk-react';
 
 import { topicsData } from '@/data/questions';
 import { getTopicResults, getTopicProgress } from '@/store/quizResults';
+import { backfillAchievements } from '@/store/achievements';
 import { QuizRing } from '@/components/QuizRing/QuizRing';
 import { AchievementsSection } from '@/components/AchievementsSection/AchievementsSection';
 import './TopicsPage.css';
@@ -39,6 +40,7 @@ export const TopicsPage: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    backfillAchievements();
     backButton.show();
     return backButton.onClick(() => navigate('/onboarding'));
   }, [navigate]);
