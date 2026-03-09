@@ -15,7 +15,7 @@ export const AchievementsSection: FC = () => {
           return (
             <div key={a.topicId} className="achievements__badge">
               <div className={`achievements__circle${isEarned ? ' achievements__circle--earned' : ''}`}>
-                {isEarned ? a.emoji : '🔒'}
+                {a.emoji}
               </div>
               <span className={`achievements__name${isEarned ? ' achievements__name--earned' : ''}`}>
                 {a.title}

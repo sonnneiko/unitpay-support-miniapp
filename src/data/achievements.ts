@@ -6,7 +6,7 @@ export interface Achievement {
 
 export const achievements: Achievement[] = [
   { topicId: 'basics',     emoji: '🏅', title: 'Знаток UnitPay'  },
-  { topicId: 'accounting', emoji: '💎', title: 'Супер помощник'  },
+  { topicId: 'accounting', emoji: '🤝', title: 'Супер помощник'  },
   { topicId: 'security',   emoji: '🛡️', title: 'Страж'           },
   { topicId: 'technical',  emoji: '⚙️', title: 'Технарь'         },
 ];
