@@ -4,6 +4,9 @@ import { backButton } from '@tma.js/sdk-react';
 
 import { topicsData } from '@/data/questions';
 import { saveTopicResults, getTopicResults, saveTopicProgress, getTopicProgress, clearTopicProgress, clearTopicResults } from '@/store/quizResults';
+import { unlockAchievement } from '@/store/achievements';
+import { achievements } from '@/data/achievements';
+import { AchievementPopup } from '@/components/AchievementPopup/AchievementPopup';
 import './QuizPage.css';
 
 const LETTERS = ['А', 'Б', 'В', 'Г'];
@@ -37,6 +40,7 @@ export const QuizPage: FC = () => {
   const [answerState, setAnswerState] = useState<AnswerState>('idle');
   const [finished, setFinished] = useState(savedResults !== null);
   const [results, setResults] = useState<('correct' | 'wrong')[]>(savedResults ?? savedProgress?.results ?? []);
+  const [earnedAchievement, setEarnedAchievement] = useState<{ emoji: string; title: string } | null>(null);
 
   const question = questions[currentIndex];
 
@@ -75,6 +79,14 @@ export const QuizPage: FC = () => {
       saveTopicResults(topicId!, newResults);
       clearTopicProgress(topicId!);
       setFinished(true);
+      const isPerfect = newResults.every(r => r === 'correct');
+      if (isPerfect && topicId) {
+        const wasNew = unlockAchievement(topicId);
+        if (wasNew) {
+          const achievement = achievements.find(a => a.topicId === topicId);
+          if (achievement) setEarnedAchievement(achievement);
+        }
+      }
     }
   };
 
@@ -132,6 +144,13 @@ export const QuizPage: FC = () => {
           <button className="quiz__next" onClick={() => navigate('/topics')}>К темам</button>
           <button className="quiz__secondary" onClick={handleRestart}>Пройти ещё раз</button>
         </div>
+        {earnedAchievement && (
+          <AchievementPopup
+            emoji={earnedAchievement.emoji}
+            title={earnedAchievement.title}
+            onClose={() => setEarnedAchievement(null)}
+          />
+        )}
       </div>
     );
   }
