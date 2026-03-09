@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { backButton } from '@tma.js/sdk-react';
 
 import { topicsData } from '@/data/questions';
-import { saveTopicResults, getTopicResults, saveTopicProgress, getTopicProgress, clearTopicProgress, clearTopicResults } from '@/store/quizResults';
+import { saveTopicResults, getTopicResults, saveTopicProgress, getTopicProgress, clearTopicProgress } from '@/store/quizResults';
 import { unlockAchievement } from '@/store/achievements';
 import { achievements } from '@/data/achievements';
 import { AchievementPopup } from '@/components/AchievementPopup/AchievementPopup';
@@ -38,7 +38,7 @@ export const QuizPage: FC = () => {
   const [currentIndex, setCurrentIndex] = useState(savedProgress?.currentIndex ?? 0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [answerState, setAnswerState] = useState<AnswerState>('idle');
-  const [finished, setFinished] = useState(savedResults !== null);
+  const [finished, setFinished] = useState(savedResults !== null && savedProgress === null);
   const [results, setResults] = useState<('correct' | 'wrong')[]>(savedResults ?? savedProgress?.results ?? []);
   const [earnedAchievement, setEarnedAchievement] = useState<{ emoji: string; title: string } | null>(null);
 
@@ -57,7 +57,7 @@ export const QuizPage: FC = () => {
   };
 
   const handleRestart = () => {
-    clearTopicResults(topicId!);
+    saveTopicProgress(topicId!, 0, []);
     setCurrentIndex(0);
     setResults([]);
     setSelectedIndex(null);
