@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { backButton } from '@tma.js/sdk-react';
 
 import { topicsData } from '@/data/questions';
-import { saveTopicResults, getTopicResults, saveTopicProgress, getTopicProgress, clearTopicProgress } from '@/store/quizResults';
+import { saveTopicResults, getTopicResults, saveTopicProgress, getTopicProgress, clearTopicProgress, clearTopicResults } from '@/store/quizResults';
 import './QuizPage.css';
 
 const LETTERS = ['А', 'Б', 'В', 'Г'];
@@ -50,6 +50,15 @@ export const QuizPage: FC = () => {
     } else {
       setAnswerState('wrong');
     }
+  };
+
+  const handleRestart = () => {
+    clearTopicResults(topicId!);
+    setCurrentIndex(0);
+    setResults([]);
+    setSelectedIndex(null);
+    setAnswerState('idle');
+    setFinished(false);
   };
 
   const handleNext = () => {
@@ -121,6 +130,7 @@ export const QuizPage: FC = () => {
         </div>
         <div className="quiz__footer">
           <button className="quiz__next" onClick={() => navigate('/topics')}>К темам</button>
+          <button className="quiz__secondary" onClick={handleRestart}>Пройти ещё раз</button>
         </div>
       </div>
     );

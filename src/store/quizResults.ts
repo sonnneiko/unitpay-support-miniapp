@@ -45,3 +45,9 @@ export const clearTopicProgress = (topicId: string) => {
   delete store[topicId];
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(store));
 };
+
+export const clearTopicResults = (topicId: string) => {
+  const store = loadResults();
+  delete store[topicId];
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(store));
+};
