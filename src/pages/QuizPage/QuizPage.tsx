@@ -33,7 +33,9 @@ export const QuizPage: FC = () => {
   }, [navigate]);
 
   const savedProgress = topicId ? getTopicProgress(topicId) : null;
-  const savedResults = topicId ? getTopicResults(topicId) : null;
+  const rawSavedResults = topicId ? getTopicResults(topicId) : null;
+  // Если вопросов стало больше — старые результаты устарели, сбрасываем
+  const savedResults = rawSavedResults?.length === questions.length ? rawSavedResults : null;
 
   const [currentIndex, setCurrentIndex] = useState(savedProgress?.currentIndex ?? 0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
