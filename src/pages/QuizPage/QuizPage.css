@@ -286,6 +286,7 @@
   margin: 0;
   line-height: 1.45;
   opacity: 0.85;
+  white-space: pre-wrap;
 }
 
 /* Footer */
