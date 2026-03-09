@@ -76,6 +76,12 @@
   flex-shrink: 0;
 }
 
+.onboarding__sticker--mascot {
+  width: 260px;
+  height: 300px;
+  object-fit: contain;
+}
+
 .onboarding__title {
   font-size: 24px;
   font-weight: 700;

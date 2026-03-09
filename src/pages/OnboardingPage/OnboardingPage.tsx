@@ -4,10 +4,10 @@ import { useSignal, initData, backButton } from '@tma.js/sdk-react';
 
 import './OnboardingPage.css';
 
-import stickerHello from '../../../assets/img/stickers/001.png';
-import stickerUnitpay from '../../../assets/img/stickers/011.png';
-import stickerSituations from '../../../assets/img/stickers/012.png';
-import stickerReady from '../../../assets/img/stickers/030.png';
+import stickerHello from '../../../assets/img/stickers/unitpay_cat_image.png';
+import stickerUnitpay from '../../../assets/img/stickers/UnitPay 2.png';
+import stickerSituations from '../../../assets/img/stickers/UnitPay фон удален.png';
+import stickerReady from '../../../assets/img/stickers/UnitPay 4.png';
 
 export const OnboardingPage: FC = () => {
   const [current, setCurrent] = useState(0);
@@ -29,7 +29,7 @@ export const OnboardingPage: FC = () => {
     {
       sticker: stickerSituations,
       title: 'Реальные ситуации',
-      description: 'Отвечай на вопросы из настоящей рабочей практики поддержки.',
+      description: 'Отвечай на вопросы из настоящей рабочей практики.',
     },
     {
       sticker: stickerReady,
@@ -95,7 +95,12 @@ export const OnboardingPage: FC = () => {
       >
         {slides.map((slide, i) => (
           <div className="onboarding__slide" key={i}>
-            <img className="onboarding__sticker" src={slide.sticker} alt="" draggable={false} />
+            <img
+              className="onboarding__sticker onboarding__sticker--mascot"
+              src={slide.sticker}
+              alt=""
+              draggable={false}
+            />
             <p className="onboarding__title">{slide.title}</p>
             <p className="onboarding__description">{slide.description}</p>
           </div>
