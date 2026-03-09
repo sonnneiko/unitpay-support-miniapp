@@ -5,6 +5,7 @@ import { backButton } from '@tma.js/sdk-react';
 import { topicsData } from '@/data/questions';
 import { getTopicResults, getTopicProgress } from '@/store/quizResults';
 import { QuizRing } from '@/components/QuizRing/QuizRing';
+import { AchievementsSection } from '@/components/AchievementsSection/AchievementsSection';
 import './TopicsPage.css';
 
 const topics = [
@@ -76,6 +77,7 @@ export const TopicsPage: FC = () => {
           );
         })}
       </div>
+      <AchievementsSection />
     </div>
   );
 };
