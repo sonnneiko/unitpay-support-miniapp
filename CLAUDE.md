@@ -17,7 +17,7 @@ npm run deploy       # Сборка и деплой на GitHub Pages
 
 ## Архитектура
 
-Это Telegram Mini App на React + TypeScript, собираемое через Vite.
+Это Telegram Mini App на React + TypeScript, собираемое через Vite. Приложение — обучающий квиз для сотрудников поддержки UnitPay (платёжный агрегатор).
 
 **Точка входа:** `src/index.tsx`
 1. Импортирует `src/mockEnv.ts` — в dev-режиме эмулирует окружение Telegram, если приложение запущено вне него (в продакшене код удаляется tree-shaking'ом)
@@ -44,6 +44,18 @@ Root
 **Debug-режим** активируется автоматически в dev-сборке или если `tgWebAppStartParam` содержит строку `debug`.
 
 **macOS Telegram** имеет баги с темой и safe area — в `src/init.ts` есть специальный обходной путь через `mockTelegramEnv`.
+
+## Доменная логика
+
+**Данные квизов** — `src/data/questions.ts`. Содержит массив `topicsData: TopicData[]`. Каждый топик имеет `id`, `title` и массив `questions`. Вопросы могут включать `chatMessages` (диалог для отображения в квизе) и `explanation` (объяснение после ответа). Ответы — `options: string[]` + `correctIndex: number`. Для добавления нового раздела — добавить объект в `topicsData`.
+
+**Достижения** — `src/data/achievements.ts`. Каждое достижение привязано к `topicId`. Разблокируется при прохождении раздела без единой ошибки (100% правильных ответов). Хранятся в `localStorage` через `src/store/achievements.ts`.
+
+**Хранилище** — всё хранится в `localStorage` без внешнего стейт-менеджера:
+- `src/store/quizResults.ts` — результаты (`quiz_results`) и прогресс в середине прохождения (`quiz_progress`)
+- `src/store/achievements.ts` — разблокированные ачивки (`achievements`)
+
+**Пользовательский флоу:** `IndexPage` → `OnboardingPage` → `TopicsPage` (список разделов с прогрессом и ачивками) → `QuizPage/:topicId` (сам квиз).
 
 ## Деплой
 
