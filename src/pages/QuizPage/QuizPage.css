@@ -415,3 +415,17 @@
   background: var(--tg-theme-hint-color, #ddd);
   flex-shrink: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+  .quiz__option {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  .quiz__option--correct {
+    border-color: #34C759;
+  }
+
+  .quiz__option--wrong {
+    border-color: #FF3B30;
+  }
+}
