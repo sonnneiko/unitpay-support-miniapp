@@ -35,10 +35,18 @@
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
 }
 
+.achievement-popup__card--locked {
+  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+}
+
 .achievement-popup__emoji {
   font-size: 64px;
   line-height: 1;
   margin-bottom: 12px;
+}
+
+.achievement-popup__emoji--locked {
+  filter: grayscale(1) opacity(0.4);
 }
 
 .achievement-popup__label {
@@ -50,11 +58,22 @@
   margin: 0 0 6px;
 }
 
+.achievement-popup__label--locked {
+  color: var(--tg-theme-hint-color, #888);
+}
+
 .achievement-popup__title {
   font-size: 22px;
   font-weight: 700;
   color: var(--tg-theme-text-color, #000);
   margin: 0 0 20px;
+}
+
+.achievement-popup__description {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #888);
+  margin: 0 0 20px;
+  line-height: 1.4;
 }
 
 .achievement-popup__dismiss {
