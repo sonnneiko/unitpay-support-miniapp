@@ -4,7 +4,7 @@ import { backButton } from '@tma.js/sdk-react';
 
 import { topicsData } from '@/data/questions';
 import { getTopicResults, getTopicProgress } from '@/store/quizResults';
-import { backfillAchievements } from '@/store/achievements';
+import { backfillAchievements, getEarnedAchievements } from '@/store/achievements';
 import { QuizRing } from '@/components/QuizRing/QuizRing';
 import { AchievementsSection } from '@/components/AchievementsSection/AchievementsSection';
 import './TopicsPage.css';
@@ -45,6 +45,8 @@ export const TopicsPage: FC = () => {
     return backButton.onClick(() => navigate('/onboarding'));
   }, [navigate]);
 
+  const earnedAchievements = getEarnedAchievements();
+
   return (
     <div className="topics">
       <div className="topics__header">
@@ -56,7 +58,9 @@ export const TopicsPage: FC = () => {
         {topics.map((topic) => {
           const topicData = topicsData.find(t => t.id === topic.id);
           const total = topicData?.questions.length ?? 0;
-          const results = getTopicResults(topic.id) ?? getTopicProgress(topic.id)?.results ?? null;
+          const savedResults = getTopicResults(topic.id) ?? getTopicProgress(topic.id)?.results ?? null;
+          // Если ачивка есть, но результаты были сброшены — показываем кольцо как полностью пройденное
+          const results = savedResults ?? (earnedAchievements.includes(topic.id) ? Array(total).fill('correct') : null);
 
           return (
             <button
