@@ -8,6 +8,8 @@ type ResultsStore = Record<string, Result[]>;
 interface Progress {
   currentIndex: number;
   results: Result[];
+  questionOrder?: number[];
+  optionOrders?: number[][];
 }
 
 type ProgressStore = Record<string, Progress>;
@@ -30,9 +32,9 @@ export const getTopicResults = (topicId: string): Result[] | null => {
   return loadResults()[topicId] ?? null;
 };
 
-export const saveTopicProgress = (topicId: string, currentIndex: number, results: Result[]) => {
+export const saveTopicProgress = (topicId: string, currentIndex: number, results: Result[], questionOrder?: number[], optionOrders?: number[][]) => {
   const store = loadProgress();
-  store[topicId] = { currentIndex, results };
+  store[topicId] = { currentIndex, results, questionOrder, optionOrders };
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(store));
 };
 

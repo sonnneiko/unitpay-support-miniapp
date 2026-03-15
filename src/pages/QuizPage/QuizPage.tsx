@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { backButton } from '@tma.js/sdk-react';
 
-import { topicsData } from '@/data/questions';
+import { topicsData, Question } from '@/data/questions';
 import { saveTopicResults, getTopicResults, saveTopicProgress, getTopicProgress, clearTopicProgress } from '@/store/quizResults';
 import { unlockAchievement } from '@/store/achievements';
 import { achievements } from '@/data/achievements';
@@ -10,6 +10,26 @@ import { AchievementPopup } from '@/components/AchievementPopup/AchievementPopup
 import './QuizPage.css';
 
 const LETTERS = ['А', 'Б', 'В', 'Г'];
+
+const shuffleIndices = (length: number): number[] => {
+  const indices = Array.from({ length }, (_, i) => i);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return indices;
+};
+
+const buildShuffledQuestions = (questions: Question[], questionOrder: number[], optionOrders: number[][]): Question[] =>
+  questionOrder.map((qi, pos) => {
+    const q = questions[qi];
+    const order = optionOrders[pos];
+    return {
+      ...q,
+      options: order.map(oi => q.options[oi]),
+      correctIndex: order.indexOf(q.correctIndex),
+    };
+  });
 
 const renderWithCode = (text: string) =>
   text.split(/`([^`]+)`/).map((part, i) =>
@@ -36,15 +56,40 @@ export const QuizPage: FC = () => {
   const rawSavedResults = topicId ? getTopicResults(topicId) : null;
   // Если вопросов стало больше — старые результаты устарели, сбрасываем
   const savedResults = rawSavedResults?.length === questions.length ? rawSavedResults : null;
+  const isAlreadyFinished = savedResults !== null && savedProgress === null;
+
+  const [quizSession, setQuizSession] = useState(() => {
+    if (questions.length === 0 || isAlreadyFinished) {
+      return { shuffledQuestions: questions, questionOrder: [] as number[], optionOrders: [] as number[][] };
+    }
+    const hasSavedOrder =
+      savedProgress?.questionOrder?.length === questions.length &&
+      savedProgress?.optionOrders?.length === questions.length;
+    let questionOrder: number[];
+    let optionOrders: number[][];
+    if (hasSavedOrder) {
+      questionOrder = savedProgress!.questionOrder!;
+      optionOrders = savedProgress!.optionOrders!;
+    } else {
+      questionOrder = shuffleIndices(questions.length);
+      optionOrders = questionOrder.map(qi => shuffleIndices(questions[qi].options.length));
+      if (topicId) {
+        saveTopicProgress(topicId, savedProgress?.currentIndex ?? 0, savedProgress?.results ?? [], questionOrder, optionOrders);
+      }
+    }
+    return { shuffledQuestions: buildShuffledQuestions(questions, questionOrder, optionOrders), questionOrder, optionOrders };
+  });
+
+  const { shuffledQuestions, questionOrder, optionOrders } = quizSession;
 
   const [currentIndex, setCurrentIndex] = useState(savedProgress?.currentIndex ?? 0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [answerState, setAnswerState] = useState<AnswerState>('idle');
-  const [finished, setFinished] = useState(savedResults !== null && savedProgress === null);
+  const [finished, setFinished] = useState(isAlreadyFinished);
   const [results, setResults] = useState<('correct' | 'wrong')[]>(savedResults ?? savedProgress?.results ?? []);
   const [earnedAchievement, setEarnedAchievement] = useState<{ emoji: string; title: string } | null>(null);
 
-  const question = questions[currentIndex];
+  const question = shuffledQuestions[currentIndex];
 
   const handleSelect = (optionIndex: number) => {
     if (answerState !== 'idle') return;
@@ -59,7 +104,11 @@ export const QuizPage: FC = () => {
   };
 
   const handleRestart = () => {
-    saveTopicProgress(topicId!, 0, []);
+    const newQuestionOrder = shuffleIndices(questions.length);
+    const newOptionOrders = newQuestionOrder.map(qi => shuffleIndices(questions[qi].options.length));
+    const newShuffled = buildShuffledQuestions(questions, newQuestionOrder, newOptionOrders);
+    saveTopicProgress(topicId!, 0, [], newQuestionOrder, newOptionOrders);
+    setQuizSession({ shuffledQuestions: newShuffled, questionOrder: newQuestionOrder, optionOrders: newOptionOrders });
     setCurrentIndex(0);
     setResults([]);
     setSelectedIndex(null);
@@ -71,12 +120,12 @@ export const QuizPage: FC = () => {
     const newResults = [...results, answerState as 'correct' | 'wrong'];
     setResults(newResults);
 
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < shuffledQuestions.length - 1) {
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
       setSelectedIndex(null);
       setAnswerState('idle');
-      saveTopicProgress(topicId!, nextIndex, newResults);
+      saveTopicProgress(topicId!, nextIndex, newResults, questionOrder, optionOrders);
     } else {
       saveTopicResults(topicId!, newResults);
       clearTopicProgress(topicId!);
@@ -123,7 +172,7 @@ export const QuizPage: FC = () => {
 
   if (finished) {
     const correctCount = results.filter(r => r === 'correct').length;
-    const total = questions.length;
+    const total = shuffledQuestions.length;
     return (
       <div className="quiz">
         <div className="quiz__finish">
@@ -162,7 +211,7 @@ export const QuizPage: FC = () => {
       <div className="quiz__header">
         <div className="quiz__progress-row">
           <div className="quiz__progress-bar">
-            {questions.map((_, i) => (
+            {shuffledQuestions.map((_, i) => (
               <div
                 key={i}
                 className={`quiz__progress-segment${
@@ -178,7 +227,7 @@ export const QuizPage: FC = () => {
             ))}
           </div>
           <span className="quiz__progress-label">
-            {currentIndex + 1} / {questions.length}
+            {currentIndex + 1} / {shuffledQuestions.length}
           </span>
         </div>
       </div>
@@ -235,7 +284,7 @@ export const QuizPage: FC = () => {
       {answerState !== 'idle' && (
         <div className="quiz__footer">
           <button className="quiz__next" onClick={handleNext}>
-            {currentIndex < questions.length - 1 ? 'Далее →' : 'Завершить'}
+            {currentIndex < shuffledQuestions.length - 1 ? 'Далее →' : 'Завершить'}
           </button>
         </div>
       )}
