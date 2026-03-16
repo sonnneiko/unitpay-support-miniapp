@@ -84,6 +84,7 @@ export const QuizPage: FC = () => {
 
   const [currentIndex, setCurrentIndex] = useState(savedProgress?.currentIndex ?? 0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedIndices, setSelectedIndices] = useState<(number | null)[]>([]);
   const [answerState, setAnswerState] = useState<AnswerState>('idle');
   const [finished, setFinished] = useState(isAlreadyFinished);
   const [results, setResults] = useState<('correct' | 'wrong')[]>(savedResults ?? savedProgress?.results ?? []);
@@ -95,12 +96,25 @@ export const QuizPage: FC = () => {
     if (answerState !== 'idle') return;
 
     setSelectedIndex(optionIndex);
+    setSelectedIndices(prev => {
+      const next = [...prev];
+      next[currentIndex] = optionIndex;
+      return next;
+    });
 
     if (optionIndex === question.correctIndex) {
       setAnswerState('correct');
     } else {
       setAnswerState('wrong');
     }
+  };
+
+  const handleBack = () => {
+    const prevIndex = currentIndex - 1;
+    setCurrentIndex(prevIndex);
+    const prevSelected = selectedIndices[prevIndex] ?? null;
+    setSelectedIndex(prevSelected);
+    setAnswerState(results[prevIndex]);
   };
 
   const handleRestart = () => {
@@ -112,30 +126,43 @@ export const QuizPage: FC = () => {
     setCurrentIndex(0);
     setResults([]);
     setSelectedIndex(null);
+    setSelectedIndices([]);
     setAnswerState('idle');
     setFinished(false);
   };
 
   const handleNext = () => {
-    const newResults = [...results, answerState as 'correct' | 'wrong'];
-    setResults(newResults);
+    // Если просматриваем уже отвеченный вопрос — просто переходим вперёд без записи
+    const isReviewing = currentIndex < results.length;
+    const newResults = isReviewing ? results : [...results, answerState as 'correct' | 'wrong'];
+
+    if (!isReviewing) setResults(newResults);
 
     if (currentIndex < shuffledQuestions.length - 1) {
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
-      setSelectedIndex(null);
-      setAnswerState('idle');
+      if (nextIndex < newResults.length) {
+        // Следующий вопрос уже отвечен — показываем в режиме просмотра
+        setAnswerState(newResults[nextIndex]);
+        setSelectedIndex(selectedIndices[nextIndex] ?? null);
+      } else {
+        // Свежий вопрос
+        setAnswerState('idle');
+        setSelectedIndex(null);
+      }
       saveTopicProgress(topicId!, nextIndex, newResults, questionOrder, optionOrders);
     } else {
-      saveTopicResults(topicId!, newResults);
-      clearTopicProgress(topicId!);
-      setFinished(true);
-      const isPerfect = newResults.every(r => r === 'correct');
-      if (isPerfect && topicId) {
-        const wasNew = unlockAchievement(topicId);
-        if (wasNew) {
-          const achievement = achievements.find(a => a.topicId === topicId);
-          if (achievement) setEarnedAchievement(achievement);
+      if (!isReviewing) {
+        saveTopicResults(topicId!, newResults);
+        clearTopicProgress(topicId!);
+        setFinished(true);
+        const isPerfect = newResults.every(r => r === 'correct');
+        if (isPerfect && topicId) {
+          const wasNew = unlockAchievement(topicId);
+          if (wasNew) {
+            const achievement = achievements.find(a => a.topicId === topicId);
+            if (achievement) setEarnedAchievement(achievement);
+          }
         }
       }
     }
@@ -272,7 +299,9 @@ export const QuizPage: FC = () => {
             <span className="quiz__feedback-title">
               {answerState === 'correct'
                 ? '✅ Всё верно!'
-                : `❌ Нет, это не «${question.options[selectedIndex!]}».`}
+                : selectedIndex !== null
+                  ? `❌ Нет, это не «${question.options[selectedIndex]}».`
+                  : '❌ Неверно.'}
             </span>
             {question.explanation && (
               <p className="quiz__feedback-text">{question.explanation}</p>
@@ -281,11 +310,16 @@ export const QuizPage: FC = () => {
         )}
       </div>
 
-      {answerState !== 'idle' && (
+      {(answerState !== 'idle' || currentIndex > 0) && (
         <div className="quiz__footer">
-          <button className="quiz__next" onClick={handleNext}>
-            {currentIndex < shuffledQuestions.length - 1 ? 'Далее →' : 'Завершить'}
-          </button>
+          {currentIndex > 0 && (
+            <button className="quiz__secondary" onClick={handleBack}>← Назад</button>
+          )}
+          {answerState !== 'idle' && (
+            <button className="quiz__next" onClick={handleNext}>
+              {currentIndex < shuffledQuestions.length - 1 ? 'Далее →' : 'Завершить'}
+            </button>
+          )}
         </div>
       )}
     </div>
