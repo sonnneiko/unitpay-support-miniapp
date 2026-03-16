@@ -311,9 +311,9 @@ export const QuizPage: FC = () => {
       </div>
 
       {(answerState !== 'idle' || currentIndex > 0) && (
-        <div className="quiz__footer">
+        <div className={`quiz__footer${answerState !== 'idle' && currentIndex > 0 ? ' quiz__footer--row' : ''}`}>
           {currentIndex > 0 && (
-            <button className="quiz__secondary" onClick={handleBack}>← Назад</button>
+            <button className="quiz__back" onClick={handleBack}>←</button>
           )}
           {answerState !== 'idle' && (
             <button className="quiz__next" onClick={handleNext}>

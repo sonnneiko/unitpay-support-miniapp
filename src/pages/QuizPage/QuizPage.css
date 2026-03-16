@@ -336,6 +336,34 @@
   opacity: 0.6;
 }
 
+.quiz__footer--row {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.quiz__footer--row .quiz__back {
+  flex-shrink: 0;
+  width: 56px;
+  padding: 14px 0;
+  border: none;
+  border-radius: 12px;
+  background: var(--tg-theme-secondary-bg-color, rgba(0,0,0,0.06));
+  color: var(--tg-theme-text-color, #000);
+  font-size: 20px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.quiz__footer--row .quiz__back:active {
+  opacity: 0.6;
+}
+
+.quiz__footer--row .quiz__next {
+  flex: 1;
+}
+
 /* Finish screen */
 .quiz__finish {
   flex: 1;
