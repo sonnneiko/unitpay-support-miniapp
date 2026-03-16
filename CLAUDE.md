@@ -49,13 +49,22 @@ Root
 
 **Данные квизов** — `src/data/questions.ts`. Содержит массив `topicsData: TopicData[]`. Каждый топик имеет `id`, `title` и массив `questions`. Вопросы могут включать `chatMessages` (диалог для отображения в квизе) и `explanation` (объяснение после ответа). Ответы — `options: string[]` + `correctIndex: number`. Для добавления нового раздела — добавить объект в `topicsData`.
 
+- В тексте вопроса и вариантов ответа поддерживается синтаксис `` `код` `` — рендерится как `<code>` через `renderWithCode()` в `QuizPage`.
+- В `chatMessages` поле `isTyping: true` рендерит анимированные точки вместо текста.
+
 **Достижения** — `src/data/achievements.ts`. Каждое достижение привязано к `topicId`. Разблокируется при прохождении раздела без единой ошибки (100% правильных ответов). Хранятся в `localStorage` через `src/store/achievements.ts`.
+
+> **Важно:** `topicId` в `topicsData` и `achievements` должны совпадать. Текущие ID: `basics`, `accounting`, `security`, `technical`.
 
 **Хранилище** — всё хранится в `localStorage` без внешнего стейт-менеджера:
 - `src/store/quizResults.ts` — результаты (`quiz_results`) и прогресс в середине прохождения (`quiz_progress`)
 - `src/store/achievements.ts` — разблокированные ачивки (`achievements`)
 
+Порядок вопросов и вариантов ответов перемешивается случайно при старте. Порядок перемешивания сохраняется в `quiz_progress`, чтобы при возобновлении сессии вопросы шли в том же порядке. Если количество вопросов в теме изменилось — сохранённые результаты инвалидируются автоматически.
+
 **Пользовательский флоу:** `IndexPage` → `OnboardingPage` → `TopicsPage` (список разделов с прогрессом и ачивками) → `QuizPage/:topicId` (сам квиз).
+
+**Служебные страницы** (наследие шаблона, не показываются пользователям): `InitDataPage`, `LaunchParamsPage`, `ThemeParamsPage`, `TONConnectPage` — доступны по маршрутам в `routes.tsx`, но не задействованы в основном флоу.
 
 ## Деплой
 
