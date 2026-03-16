@@ -5,7 +5,7 @@
   "type": "module",
   "homepage": "https://sonnneiko.github.io/unitpay-support-miniapp",
   "scripts": {
-    "deploy": "npm version patch --no-git-tag-version && gh-pages -d dist",
+    "deploy": "npm version patch --no-git-tag-version && gh-pages -d dist && git checkout main",
     "dev": "vite",
     "dev:https": "cross-env HTTPS=true vite",
     "build": "tsc --noEmit && vite build",
