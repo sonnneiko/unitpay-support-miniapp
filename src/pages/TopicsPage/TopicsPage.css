@@ -103,3 +103,11 @@
   flex-shrink: 0;
   font-size: 18px;
 }
+
+.topics__version {
+  text-align: center;
+  font-size: 11px;
+  color: var(--tg-theme-hint-color, #aaa);
+  margin: 8px 0 16px;
+  opacity: 0.5;
+}

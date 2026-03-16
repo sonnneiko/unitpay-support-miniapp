@@ -2,6 +2,7 @@ import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { backButton } from '@tma.js/sdk-react';
 
+import { version } from '../../../package.json';
 import { topicsData } from '@/data/questions';
 import { getTopicResults, getTopicProgress } from '@/store/quizResults';
 import { backfillAchievements, getEarnedAchievements } from '@/store/achievements';
@@ -84,6 +85,7 @@ export const TopicsPage: FC = () => {
         })}
       </div>
       <AchievementsSection />
+      <p className="topics__version">v{version}</p>
     </div>
   );
 };

@@ -1,11 +1,11 @@
 {
   "name": "reactjs-template",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "homepage": "https://sonnneiko.github.io/unitpay-support-miniapp",
   "scripts": {
-    "deploy": "gh-pages -d dist",
+    "deploy": "npm version patch --no-git-tag-version && gh-pages -d dist",
     "dev": "vite",
     "dev:https": "cross-env HTTPS=true vite",
     "build": "tsc --noEmit && vite build",
