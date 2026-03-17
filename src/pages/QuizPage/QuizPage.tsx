@@ -87,7 +87,7 @@ export const QuizPage: FC = () => {
   const [selectedIndices, setSelectedIndices] = useState<(number | null)[]>([]);
   const [answerState, setAnswerState] = useState<AnswerState>('idle');
   const [finished, setFinished] = useState(isAlreadyFinished);
-  const [results, setResults] = useState<('correct' | 'wrong')[]>(savedResults ?? savedProgress?.results ?? []);
+  const [results, setResults] = useState<('correct' | 'wrong')[]>(savedProgress?.results ?? savedResults ?? []);
   const [earnedAchievement, setEarnedAchievement] = useState<{ emoji: string; title: string } | null>(null);
 
   const question = shuffledQuestions[currentIndex];
