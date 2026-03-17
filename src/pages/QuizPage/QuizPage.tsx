@@ -56,8 +56,9 @@ export const QuizPage: FC = () => {
   const rawSavedResults = topicId ? getTopicResults(topicId) : null;
   // Если вопросов стало больше — старые результаты устарели, сбрасываем
   const savedResults = rawSavedResults?.length === questions.length ? rawSavedResults : null;
-  const isEmptyProgress = savedProgress !== null && (savedProgress.results ?? []).length === 0 && (savedProgress.currentIndex ?? 0) === 0;
-  const isAlreadyFinished = savedResults !== null && (savedProgress === null || isEmptyProgress);
+  // Прогресс "настоящий" только если в нём меньше ответов, чем вопросов в теме
+  const hasRealProgress = savedProgress !== null && (savedProgress.results ?? []).length < questions.length && (savedProgress.results ?? []).length > 0;
+  const isAlreadyFinished = savedResults !== null && !hasRealProgress;
 
   const [quizSession, setQuizSession] = useState(() => {
     if (questions.length === 0 || isAlreadyFinished) {
@@ -88,7 +89,7 @@ export const QuizPage: FC = () => {
   const [selectedIndices, setSelectedIndices] = useState<(number | null)[]>([]);
   const [answerState, setAnswerState] = useState<AnswerState>('idle');
   const [finished, setFinished] = useState(isAlreadyFinished);
-  const [results, setResults] = useState<('correct' | 'wrong')[]>(savedProgress?.results ?? savedResults ?? []);
+  const [results, setResults] = useState<('correct' | 'wrong')[]>(isAlreadyFinished ? (savedResults ?? []) : (savedProgress?.results ?? []));
   const [earnedAchievement, setEarnedAchievement] = useState<{ emoji: string; title: string } | null>(null);
 
   const question = shuffledQuestions[currentIndex];
