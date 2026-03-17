@@ -87,7 +87,14 @@ export const QuizPage: FC = () => {
   const [currentIndex, setCurrentIndex] = useState(savedProgress?.currentIndex ?? 0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [selectedIndices, setSelectedIndices] = useState<(number | null)[]>([]);
-  const [answerState, setAnswerState] = useState<AnswerState>('idle');
+  const [answerState, setAnswerState] = useState<AnswerState>(() => {
+    // Если currentIndex < results.length — значит пользователь ответил на этот вопрос,
+    // но вышел до нажатия «Далее». Восстанавливаем состояние ответа.
+    if (savedProgress && savedProgress.currentIndex < (savedProgress.results ?? []).length) {
+      return savedProgress.results![savedProgress.currentIndex] as AnswerState;
+    }
+    return 'idle';
+  });
   const [finished, setFinished] = useState(isAlreadyFinished);
   const [results, setResults] = useState<('correct' | 'wrong')[]>(isAlreadyFinished ? (savedResults ?? []) : (savedProgress?.results ?? []));
   const [earnedAchievement, setEarnedAchievement] = useState<{ emoji: string; title: string } | null>(null);
@@ -104,10 +111,13 @@ export const QuizPage: FC = () => {
       return next;
     });
 
-    if (optionIndex === question.correctIndex) {
-      setAnswerState('correct');
-    } else {
-      setAnswerState('wrong');
+    const newAnswerState: AnswerState = optionIndex === question.correctIndex ? 'correct' : 'wrong';
+    setAnswerState(newAnswerState);
+
+    // Сохраняем прогресс сразу при ответе, чтобы при выходе без нажатия «Далее»
+    // пользователь не смог ответить на этот вопрос повторно
+    if (topicId) {
+      saveTopicProgress(topicId, currentIndex, [...results, newAnswerState], questionOrder, optionOrders);
     }
   };
 
