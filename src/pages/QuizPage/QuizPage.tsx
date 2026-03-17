@@ -121,7 +121,7 @@ export const QuizPage: FC = () => {
     const newQuestionOrder = shuffleIndices(questions.length);
     const newOptionOrders = newQuestionOrder.map(qi => shuffleIndices(questions[qi].options.length));
     const newShuffled = buildShuffledQuestions(questions, newQuestionOrder, newOptionOrders);
-    saveTopicProgress(topicId!, 0, [], newQuestionOrder, newOptionOrders);
+    clearTopicProgress(topicId!);
     setQuizSession({ shuffledQuestions: newShuffled, questionOrder: newQuestionOrder, optionOrders: newOptionOrders });
     setCurrentIndex(0);
     setResults([]);
