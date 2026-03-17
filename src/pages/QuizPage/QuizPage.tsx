@@ -56,7 +56,8 @@ export const QuizPage: FC = () => {
   const rawSavedResults = topicId ? getTopicResults(topicId) : null;
   // Если вопросов стало больше — старые результаты устарели, сбрасываем
   const savedResults = rawSavedResults?.length === questions.length ? rawSavedResults : null;
-  const isAlreadyFinished = savedResults !== null && savedProgress === null;
+  const isEmptyProgress = savedProgress !== null && (savedProgress.results ?? []).length === 0 && (savedProgress.currentIndex ?? 0) === 0;
+  const isAlreadyFinished = savedResults !== null && (savedProgress === null || isEmptyProgress);
 
   const [quizSession, setQuizSession] = useState(() => {
     if (questions.length === 0 || isAlreadyFinished) {
