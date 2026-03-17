@@ -103,6 +103,8 @@ export const QuizPage: FC = () => {
 
   const handleSelect = (optionIndex: number) => {
     if (answerState !== 'idle') return;
+    // Защита: если вопрос уже есть в results — он уже отвечен, повторный ответ запрещён
+    if (currentIndex < results.length) return;
 
     setSelectedIndex(optionIndex);
     setSelectedIndices(prev => {
