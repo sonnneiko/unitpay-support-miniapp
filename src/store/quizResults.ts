@@ -53,3 +53,26 @@ export const clearTopicResults = (topicId: string) => {
   delete store[topicId];
   localStorage.setItem(RESULTS_KEY, JSON.stringify(store));
 };
+
+// Очищает испорченный прогресс: если savedProgress.results.length >= savedResults.length,
+// значит это артефакт старого бага (просмотр уже завершённого теста).
+export const cleanupCorruptedProgress = (topicQuestionCounts: Record<string, number>) => {
+  const progressStore = loadProgress();
+  const resultsStore = loadResults();
+  let changed = false;
+  for (const topicId of Object.keys(progressStore)) {
+    const progress = progressStore[topicId];
+    const questionCount = topicQuestionCounts[topicId];
+    const progressResultsLen = (progress.results ?? []).length;
+    if (questionCount !== undefined && progressResultsLen >= questionCount) {
+      delete progressStore[topicId];
+      changed = true;
+    } else if (resultsStore[topicId] && progressResultsLen === 0 && (progress.currentIndex ?? 0) === 0) {
+      delete progressStore[topicId];
+      changed = true;
+    }
+  }
+  if (changed) {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progressStore));
+  }
+};
