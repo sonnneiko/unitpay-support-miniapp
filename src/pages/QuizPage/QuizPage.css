@@ -232,6 +232,12 @@
   opacity: 0.5;
 }
 
+.quiz__option--selected {
+  border-color: var(--tg-theme-button-color, #2AABEE);
+  background: rgba(42, 171, 238, 0.1);
+  cursor: default;
+}
+
 .quiz__option-letter {
   width: 26px;
   height: 26px;

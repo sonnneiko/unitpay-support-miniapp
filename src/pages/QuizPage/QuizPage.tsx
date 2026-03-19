@@ -187,15 +187,25 @@ export const QuizPage: FC = () => {
     }
   };
 
+  const isExam = topic?.isExam ?? false;
+
   const getOptionClass = (i: number) => {
     const classes = ['quiz__option'];
     if (answerState !== 'idle') {
-      if (i === question.correctIndex) {
-        classes.push('quiz__option--correct');
-      } else if (answerState === 'wrong' && i === selectedIndex) {
-        classes.push('quiz__option--wrong');
+      if (isExam) {
+        if (i === selectedIndex) {
+          classes.push('quiz__option--selected');
+        } else {
+          classes.push('quiz__option--locked');
+        }
       } else {
-        classes.push('quiz__option--locked');
+        if (i === question.correctIndex) {
+          classes.push('quiz__option--correct');
+        } else if (answerState === 'wrong' && i === selectedIndex) {
+          classes.push('quiz__option--wrong');
+        } else {
+          classes.push('quiz__option--locked');
+        }
       }
     }
     return classes.join(' ');
@@ -262,9 +272,11 @@ export const QuizPage: FC = () => {
                 key={i}
                 className={`quiz__progress-segment${
                   i < currentIndex
-                    ? results[i] === 'correct'
-                      ? ' quiz__progress-segment--correct'
-                      : ' quiz__progress-segment--wrong'
+                    ? isExam
+                      ? ' quiz__progress-segment--done'
+                      : results[i] === 'correct'
+                        ? ' quiz__progress-segment--correct'
+                        : ' quiz__progress-segment--wrong'
                     : i === currentIndex
                     ? ' quiz__progress-segment--current'
                     : ''
@@ -317,7 +329,7 @@ export const QuizPage: FC = () => {
           ))}
         </div>
 
-        {answerState !== 'idle' && (
+        {answerState !== 'idle' && !isExam && (
           <div className={`quiz__feedback quiz__feedback--${answerState}`}>
             <span className="quiz__feedback-title">
               {answerState === 'correct'
@@ -333,16 +345,16 @@ export const QuizPage: FC = () => {
         )}
       </div>
 
-      {(answerState !== 'idle' || currentIndex > 0) && (
-        <div className={`quiz__footer${answerState !== 'idle' && currentIndex > 0 ? ' quiz__footer--row' : ''}`}>
-          {currentIndex > 0 && (
-            <button className="quiz__back" onClick={handleBack}>←</button>
-          )}
-          {answerState !== 'idle' && (
-            <button className="quiz__next" onClick={handleNext}>
-              {currentIndex < shuffledQuestions.length - 1 ? 'Далее →' : 'Завершить'}
-            </button>
-          )}
+      {answerState !== 'idle' && (
+        <div className="quiz__footer">
+          <button className="quiz__next" onClick={handleNext}>
+            {currentIndex < shuffledQuestions.length - 1 ? 'Далее →' : 'Завершить'}
+          </button>
+        </div>
+      )}
+      {!isExam && answerState === 'idle' && currentIndex > 0 && (
+        <div className="quiz__footer">
+          <button className="quiz__back" onClick={handleBack}>←</button>
         </div>
       )}
     </div>

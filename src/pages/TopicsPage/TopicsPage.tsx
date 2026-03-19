@@ -84,6 +84,18 @@ export const TopicsPage: FC = () => {
           );
         })}
       </div>
+      <div className="topics__exam-section">
+        <button
+          className="topics__exam-card"
+          onClick={() => navigate('/quiz/exam')}
+        >
+          <div className="topics__exam-icon">🎓</div>
+          <div className="topics__card-body">
+            <p className="topics__card-title">Финальный экзамен</p>
+            <p className="topics__card-desc">30 вопросов из всех разделов без подсказок</p>
+          </div>
+        </button>
+      </div>
       <AchievementsSection />
       <p className="topics__version">v{version}</p>
     </div>
