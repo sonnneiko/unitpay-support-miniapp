@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { backButton } from '@tma.js/sdk-react';
+import { backButton, initData } from '@tma.js/sdk-react';
 
 import { topicsData, Question } from '@/data/questions';
 import catImage from '../../../assets/img/stickers/unitpay_cat_image.png';
@@ -182,6 +182,25 @@ export const QuizPage: FC = () => {
             const achievement = achievements.find(a => a.topicId === topicId);
             if (achievement) setEarnedAchievement(achievement);
           }
+        }
+        if (isExam) {
+          const user = initData.user();
+          const userName = user
+            ? [user.first_name, user.last_name].filter(Boolean).join(' ') + (user.username ? ` (@${user.username})` : '')
+            : 'Неизвестный пользователь';
+          const wrongQuestions = newResults
+            .map((r, i) => r === 'wrong' ? shuffledQuestions[i].text : null)
+            .filter(Boolean) as string[];
+          fetch('https://wandering-cloud-df21.rey04.workers.dev/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userName,
+              score: newResults.filter(r => r === 'correct').length,
+              total: newResults.length,
+              wrongQuestions,
+            }),
+          }).catch(() => {});
         }
       }
     }
