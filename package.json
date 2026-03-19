@@ -1,7 +1,7 @@
 {
   "name": "reactjs-template",
   "private": true,
-  "version": "0.0.12",
+  "version": "0.0.19",
   "type": "module",
   "homepage": "https://sonnneiko.github.io/unitpay-support-miniapp",
   "scripts": {
