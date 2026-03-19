@@ -184,32 +184,38 @@ export const QuizPage: FC = () => {
           }
         }
         if (isExam) {
-          const user = initData.user();
-          const userName = user
-            ? [user.first_name, user.last_name].filter(Boolean).join(' ') + (user.username ? ` (@${user.username})` : '')
-            : 'Неизвестный пользователь';
-          const score = newResults.filter(r => r === 'correct').length;
-          const total = newResults.length;
-          const wrongQuestions = newResults
-            .map((r, i) => r === 'wrong' ? shuffledQuestions[i].text : null)
-            .filter(Boolean) as string[];
-          const wrongList = wrongQuestions.length > 0
-            ? wrongQuestions.map(q => `• ${q}`).join('\n')
-            : 'Все вопросы — верно! 🎉';
-          const text = `📋 <b>Финальный экзамен пройден</b>\n\n` +
-            `👤 <b>${userName}</b>\n` +
-            `✅ Верных: ${score} / ${total}\n` +
-            `❌ Неверных: ${total - score}\n\n` +
-            (wrongQuestions.length > 0 ? `<b>Ошибки:</b>\n${wrongList}` : wrongList);
-          const BOT_TOKEN = '8683940198:AAFgct0RbqWDZFbQW8gzBLqov9EB5qPUxeY';
-          const CHAT_IDS = ['1389205489', '6335871839'];
-          CHAT_IDS.forEach(chatId => {
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
-            }).catch(() => {});
-          });
+          try {
+            let userName = 'Неизвестный пользователь';
+            try {
+              const user = initData.user();
+              if (user) {
+                userName = [user.first_name, user.last_name].filter(Boolean).join(' ');
+                if (user.username) userName += ` (@${user.username})`;
+              }
+            } catch { /* имя недоступно */ }
+            const score = newResults.filter(r => r === 'correct').length;
+            const total = newResults.length;
+            const wrongQuestions = newResults
+              .map((r, i) => r === 'wrong' ? shuffledQuestions[i].text : null)
+              .filter(Boolean) as string[];
+            const wrongList = wrongQuestions.length > 0
+              ? wrongQuestions.map(q => `• ${q}`).join('\n')
+              : 'Все вопросы — верно! 🎉';
+            const text = `📋 <b>Финальный экзамен пройден</b>\n\n` +
+              `👤 <b>${userName}</b>\n` +
+              `✅ Верных: ${score} / ${total}\n` +
+              `❌ Неверных: ${total - score}\n\n` +
+              (wrongQuestions.length > 0 ? `<b>Ошибки:</b>\n${wrongList}` : wrongList);
+            const BOT_TOKEN = '8683940198:AAFgct0RbqWDZFbQW8gzBLqov9EB5qPUxeY';
+            const CHAT_IDS = ['1389205489', '6335871839'];
+            CHAT_IDS.forEach(chatId => {
+              fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
+              });
+            });
+          } catch { /* не удалось отправить результат */ }
         }
       }
     }
