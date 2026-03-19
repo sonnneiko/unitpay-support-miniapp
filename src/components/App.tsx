@@ -65,9 +65,9 @@ export function App() {
     >
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/onboarding" replace />} />
+          <Route path="/" element={<Navigate to={localStorage.getItem('onboarding_done') ? '/topics' : '/onboarding'} replace />} />
           {routes.filter(r => r.path !== '/').map((route) => <Route key={route.path} {...route} />)}
-          <Route path="*" element={<Navigate to="/onboarding" replace />} />
+          <Route path="*" element={<Navigate to={localStorage.getItem('onboarding_done') ? '/topics' : '/onboarding'} replace />} />
         </Routes>
       </HashRouter>
     </AppRoot>

@@ -44,6 +44,7 @@ export const OnboardingPage: FC = () => {
   }, []);
 
   const finish = () => {
+    localStorage.setItem('onboarding_done', '1');
     navigate('/topics');
   };
 
