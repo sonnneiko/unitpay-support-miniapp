@@ -3,6 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { backButton } from '@tma.js/sdk-react';
 
 import { topicsData, Question } from '@/data/questions';
+import catImage from '../../../assets/img/stickers/unitpay_cat_image.png';
+
+const IMAGES: Record<string, string> = {
+  unitpay_cat: catImage,
+};
 import { saveTopicResults, getTopicResults, saveTopicProgress, getTopicProgress, clearTopicProgress } from '@/store/quizResults';
 import { unlockAchievement } from '@/store/achievements';
 import { achievements } from '@/data/achievements';
@@ -275,6 +280,10 @@ export const QuizPage: FC = () => {
 
       <div className="quiz__body">
         <p className="quiz__question">{question.text}</p>
+
+        {question.image && IMAGES[question.image] && (
+          <img src={IMAGES[question.image]} className="quiz__image" alt="" />
+        )}
 
         {question.chatMessages && (
           <div className="quiz__chat">

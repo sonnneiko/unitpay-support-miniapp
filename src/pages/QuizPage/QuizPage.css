@@ -89,6 +89,15 @@
   margin: 0 0 20px;
 }
 
+/* Question image */
+.quiz__image {
+  display: block;
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  margin: 0 auto 20px;
+}
+
 /* Chat preview */
 .quiz__chat {
   background: var(--tg-theme-secondary-bg-color, #f0f0f0);
