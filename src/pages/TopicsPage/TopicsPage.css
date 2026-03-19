@@ -142,3 +142,10 @@
   font-size: 32px;
   flex-shrink: 0;
 }
+
+.topics__exam-card--locked {
+  border-color: var(--tg-theme-hint-color, #aaa);
+  background: var(--tg-theme-secondary-bg-color, #f4f4f5);
+  opacity: 0.6;
+  cursor: default;
+}

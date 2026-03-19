@@ -47,6 +47,9 @@ export const TopicsPage: FC = () => {
   }, [navigate]);
 
   const earnedAchievements = getEarnedAchievements();
+  const examUnlocked = ['basics', 'accounting', 'security', 'technical'].every(id =>
+    earnedAchievements.includes(id)
+  );
 
   return (
     <div className="topics">
@@ -86,13 +89,17 @@ export const TopicsPage: FC = () => {
       </div>
       <div className="topics__exam-section">
         <button
-          className="topics__exam-card"
-          onClick={() => navigate('/quiz/exam')}
+          className={`topics__exam-card${examUnlocked ? '' : ' topics__exam-card--locked'}`}
+          onClick={() => examUnlocked && navigate('/quiz/exam')}
         >
-          <div className="topics__exam-icon">🎓</div>
+          <div className="topics__exam-icon">{examUnlocked ? '🎓' : '🔐'}</div>
           <div className="topics__card-body">
             <p className="topics__card-title">Финальный экзамен</p>
-            <p className="topics__card-desc">30 вопросов из всех разделов без подсказок</p>
+            <p className="topics__card-desc">
+              {examUnlocked
+                ? '30 вопросов из всех разделов без подсказок'
+                : 'Пройди все разделы без ошибок, чтобы разблокировать'}
+            </p>
           </div>
         </button>
       </div>
