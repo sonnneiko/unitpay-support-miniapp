@@ -22,6 +22,7 @@ const ALLOWED_USERNAMES = [
   'pavlova_webmasters',
   'unitcom',
   'ignat',
+  'head_of_sales_unitpay',
 ];
 
 export function App() {
